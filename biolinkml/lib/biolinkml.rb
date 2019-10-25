@@ -1,18 +1,21 @@
 #require "biolinkml/version"
 require "safe_yaml"
+require "rdf/vocab"
 
 SafeYAML::OPTIONS[:default_mode] = :safe
 SafeYAML::OPTIONS[:deserialize_symbols] = false
 
 
 module Biolinkml
-  class Error < StandardError; end
-  # Your code goes here...
-  
+  class Error < StandardError; 
+  end
+
+
   class Reader
     attr_accessor :filename
     attr_accessor :yamlstring
     attr_accessor :yaml  # parsed into a hash
+    attr_accessor :namespaces
     
     def initialize(args)
       @filename = args.fetch(:filename, nil)
@@ -24,8 +27,16 @@ module Biolinkml
         return false
       end
       
+      begin
+        yaml = self.parse()
+        @yaml = yaml
+      rescue
+        warn "YAML parsing failed.  Variable has not been set"
+      end
+      
     end
-    
+
+
     def parse()
        if self.filename
          self.yaml = self.parsefile(self.filename)
@@ -42,30 +53,35 @@ module Biolinkml
     
     
     def self.parsefile(filename)
+#TODO
 
     end
 
+    def parsefile(filename)
+#TODO (see class method above)
+    end
 
 
     def self.parsestring(yamlstring)
-      yaml = YAML.load(yamlstring)
-      yaml.inspect
-       
+      parsestring(yamlstring)
     end
-
-
-
-    def parsefile(filename)
-
-    end
-
-
-
+    
     def parsestring(yamlstring)
       yaml = YAML.load(yamlstring)
-      puts  yaml.inspect
-      return yaml 
+      #yaml.inspect
+      return yaml
     end
+    
+    
+    def prefixes
+        prefs = self.yaml["prefixes"]
+        pref.each do |prefix, val|
+          puts prefix + "\t\t\t" + val
+        end
+        
+        
+    end
+    
 
   end
     

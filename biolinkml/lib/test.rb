@@ -39,5 +39,10 @@ EOF
 
 p = Biolinkml::Reader.new(yamlstring: yaml)
 y = p.parse
-puts y
+y.is_a?(Array)
 
+pref = p.prefixes
+
+pref.each do |prefix, val|
+	puts prefix + "\t\t\t" + val
+end
