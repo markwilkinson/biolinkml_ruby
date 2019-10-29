@@ -44,5 +44,7 @@ y.is_a?(Array)
 pref = p.prefixes
 
 pref.each do |prefix, val|
-	puts prefix + "\t\t\t" + val
+	puts prefix + "\t\t\t" + val.to_s
 end
+
+puts p.default_prefix.to_s
