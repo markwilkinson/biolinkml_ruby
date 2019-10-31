@@ -1,9 +1,8 @@
 module Biolinkml
-	  class Error < StandardError; 
-	  end
 	
 	
 	  class Element
+		include NilOnInitializationError
 		
 		attr_accessor :aliases #0..* string
 		#TODO attr_accessor :alt_descriptions #0..* alt_description
@@ -28,8 +27,22 @@ module Biolinkml
 		attr_accessor :see_also # 0..* URI or curie (owl)
 		# TODO attr_accessor :todos # 0..* string
 
+		def new_if_valid(args)
+			self.new(args)
+		rescue Biolinkml::InitializationError
+			$stderr.puts "rescuing with nil"
+			nil
+		end
+
 		def initialize(args)
-		  super(args)
+
+		  # REQUIRED
+		  @name = args.fetch(:name, nil)
+		  unless @name
+			  raise Biolinkml::InitializationError.new "cannot create this object without a valid name"
+		  end
+
+		  # OPTIONAL
 		  @aliases = args.fetch(:aliases, [])
 		  # TODO @alt_descriptions = args.fetch(:alt_descriptions, [])
 		  # TODO @close_mappings = args.fetch(:close_mappings, [])
@@ -46,19 +59,18 @@ module Biolinkml
 		  # TODO @in_subset = args.fetch(:in_subset, [])
 		  @local_names = args.fetch(:local_names, [])
 		  # TODO  mappings = args.fetch(:mappings, [])
-		  @name = args.fetch(:name, nil)
 		  @notes = args.fetch(:notes, [])
 		  # TODO related_mappings = args.fetch(:related_mappings, [])
 		  @see_also = args.fetch(:see_also, [])
 		  # TODO todos = args.fetch(:todos, [])
 		  
-		  @aliases = [@aliases] unless @aliases.is_a(Array)
-		  @comments = [@comments] unless @comments.is_a(Array)
-		  @examples = [@examples] unless @examples.is_a(Array)
-		  @id_prefixes = [@id_prefixes] unless @id_prefixes.is_a(Array)
-		  @local_names = [@local_names] unless @local_names.is_a(Array)
-		  @notes = [@notes] unless @notes.is_a(Array)
-		  @see_also = [@see_also] unless @see_also.is_a(Array)
+		  @aliases = [@aliases] unless @aliases.is_a?(Array)
+		  @comments = [@comments] unless @comments.is_a?(Array)
+		  @examples = [@examples] unless @examples.is_a?(Array)
+		  @id_prefixes = [@id_prefixes] unless @id_prefixes.is_a?(Array)
+		  @local_names = [@local_names] unless @local_names.is_a?(Array)
+		  @notes = [@notes] unless @notes.is_a?(Array)
+		  @see_also = [@see_also] unless @see_also.is_a?(Array)
 		  
 		  @examples.each do |e|
 			@examples.delete(e) unless e.is_a?(Biolinkml::Example)

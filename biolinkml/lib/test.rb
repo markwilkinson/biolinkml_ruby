@@ -37,14 +37,14 @@ slots:
         multivalued: true
 EOF
 
-p = Biolinkml::Reader.new(yamlstring: yaml)
-y = p.parse
-y.is_a?(Array)
+r = Biolinkml::Reader.new(yamlstring: yaml)
+s = r.build_schema
+puts r.inspect, "\n\n"
+puts s.inspect
+puts s.default_prefix.iri, " default"
+puts s.class.default_prefix.iri, " class default"
+puts s.class.prefixes['foaf']['thisthing'], " foaf this thing"
+puts s.to_iri("samp:thingy")," samp thingy"
+puts s.class.to_iri("foaf:marky"), " foaf marky"
+puts s.class.to_iri("foal:marky"), " foal marky should fail"
 
-pref = p.prefixes
-
-pref.each do |prefix, val|
-	puts prefix + "\t\t\t" + val.to_s
-end
-
-puts p.default_prefix.to_s
