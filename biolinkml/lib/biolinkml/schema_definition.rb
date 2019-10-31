@@ -3,7 +3,7 @@ module Biolinkml
 	
 	
 	  class SchemaDefinition < Biolinkml::Element
-		include NilOnInitializationError
+		include ::NilOnInitializationError
 
 		attr_accessor :classes # 0..* ClassDefinition
 		attr_accessor :default_curi_maps # 0..* string  (https://github.com/prefixcommons/biocontext)
