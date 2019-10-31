@@ -1,6 +1,6 @@
 
 module NilOnInitializationError
-  
+  # https://stackoverflow.com/questions/10692961/inheriting-class-methods-from-modules-mixins-in-ruby
   def self.included base
     base.send :include, InstanceMethods
     base.extend ClassMethods
